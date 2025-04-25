@@ -1,26 +1,41 @@
 const User = require("../models/User");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   const { email, password, name } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const user = new User({ email, password: hashed, name });
-  await user.save();
-  res.json({ msg: "User created" });
+  try {
+    // ⛔ bcrypt 제거: 암호화 없이 평문 저장
+    const user = new User({ email, password, name });
+    await user.save();
+    res.json({ msg: "회원가입 성공" });
+  } catch (err) {
+    console.error("회원가입 에러:", err);
+    res.status(500).json({ msg: "회원가입 실패" });
+  }
 };
+
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+  console.log("🟨 로그인 시도:", email, password);
+
   const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ msg: "No user" });
+  if (!user) {
+    return res.status(401).json({ msg: "이메일 또는 비밀번호가 잘못되었습니다." });
+  }
 
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.status(403).json({ msg: "Wrong password" });
+  // ⛔ bcrypt 제거: 평문 비밀번호 비교
+  if (user.password !== password) {
+    console.log("🟥 비밀번호 불일치");
+    return res.status(401).json({ msg: "이메일 또는 비밀번호가 잘못되었습니다." });
+  }
 
-  const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
+  console.log("✅ 비밀번호 일치");
+
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
   res.json({ token });
 };
+
 
 exports.getProfile = async (req, res) => {
   const user = await User.findById(req.user.id);

@@ -1,29 +1,63 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
+// ✅ baseURL 설정 추가
+const api = axios.create({
+  baseURL: "/",  // nginx가 /api, /chat 프록시 해주기 때문에 최상위로 두면 됨
+});
+
 
 function ProductForm() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [price, setPrice] = useState("");
-  const nav = useNavigate();
 
-  const submit = () => {
-    axios.post("/api/items", {
-      title, description: desc, price
-    }, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    }).then(() => nav("/products"));
+  const submit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        "/api/items",
+        {
+          title,
+          description: desc,
+          price,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("상품 등록 성공");
+      window.location.href = "/products";
+    } catch (err) {
+      alert("상품 등록 실패");
+      console.error("등록 오류:", err.response?.data || err.message);
+    }
   };
 
   return (
-    <div>
+    <form onSubmit={submit}>
       <h2>상품 등록</h2>
-      <input placeholder="제목" value={title} onChange={(e) => setTitle(e.target.value)} />
-      <textarea placeholder="설명" value={desc} onChange={(e) => setDesc(e.target.value)} />
-      <input type="number" placeholder="가격" value={price} onChange={(e) => setPrice(e.target.value)} />
-      <button onClick={submit}>등록</button>
-    </div>
+      <input
+        placeholder="제목"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <input
+        placeholder="설명"
+        value={desc}
+        onChange={(e) => setDesc(e.target.value)}
+      />
+      <input
+        placeholder="가격"
+        type="number"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+      />
+      <button type="submit">등록</button>
+    </form>
   );
 }
 

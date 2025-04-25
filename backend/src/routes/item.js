@@ -1,24 +1,23 @@
-import React, { useState } from "react";
-import axios from "axios";
+const express = require("express");
+const router = express.Router();
+const auth = require("../middleware/auth");
+const {
+  createItem,
+  getItems,
+  getItem,
+  reportItem
+} = require("../controllers/productController");
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [pw, setPw] = useState("");
+// 상품 등록
+router.post("/", auth, createItem);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await axios.post("/api/users/login", { email, password: pw });
-    alert("로그인 성공");
-  };
+// 전체 상품 조회
+router.get("/", getItems);
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>로그인</h2>
-      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="이메일" />
-      <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="비밀번호" />
-      <button type="submit">로그인</button>
-    </form>
-  );
-}
+// 특정 상품 상세 조회
+router.get("/:id", getItem);
 
-export default Login;
+// 상품 신고
+router.post("/:id/report", auth, reportItem);
+
+module.exports = router;

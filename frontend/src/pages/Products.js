@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+// ✅ baseURL 설정 추가
+const api = axios.create({
+  baseURL: "/",  // nginx가 /api, /chat 프록시 해주기 때문에 최상위로 두면 됨
+});
+
 function Products() {
   const [items, setItems] = useState([]);
 
