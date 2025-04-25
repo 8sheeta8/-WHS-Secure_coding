@@ -1,17 +1,23 @@
 const WebSocket = require("ws");
 const server = new WebSocket.Server({ port: 4000 });
 
-server.on("connection", socket => {
-  socket.on("message", (msg) => {
-    try {
-      const data = JSON.parse(msg);
-      console.log(`[채팅 수신] ${data.user}: ${data.message}`);
-      io.emit("message", `${data.user}: ${data.message}`);
-    } catch {
-      console.log("잘못된 메시지 형식:", msg);
-    }
-  });
-  
-});
+const wss = new WebSocket.Server({ server });
 
-console.log("WebSocket server running on port 4000");
+wss.on("connection", (ws, req) => {
+  const roomId = req.url.split("/").pop(); // /chat/roomId
+
+  if (!wss.rooms) wss.rooms = {};
+  if (!wss.rooms[roomId]) wss.rooms[roomId] = [];
+
+  wss.rooms[roomId].push(ws);
+
+  ws.on("message", (msg) => {
+    const parsed = JSON.parse(msg);
+    // 해당 방에만 메시지 브로드캐스트
+    wss.rooms[roomId].forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(parsed));
+      }
+    });
+  });
+});

@@ -11,10 +11,11 @@ function Admin() {
   }, []);
 
   const banUser = (id) => {
-    axios.post(`/api/admin/ban/${id}`, {}, {
+    axios.put(`/api/admin/users/${id}/ban`, {}, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     }).then(() => alert("유저 차단됨"));
   };
+  
 
   const deleteProduct = (id) => {
     axios.delete(`/api/admin/product/${id}`, {
@@ -27,9 +28,17 @@ function Admin() {
       <h2>관리자 신고 목록</h2>
       {reports.map((r) => (
         <div key={r._id}>
-          <p>{r.type} - {r.reason}</p>
-          {r.type === "user" && <button onClick={() => banUser(r.targetId)}>유저 차단</button>}
-          {r.type === "product" && <button onClick={() => deleteProduct(r.targetId)}>상품 삭제</button>}
+          <p>{r.reason}</p>
+          {r.type === "product" && (
+            <>
+              <button onClick={() => deleteItem(r.targetId)}>상품 삭제</button>
+            </>
+          )}
+          {r.type === "user" && (
+            <>
+              <button onClick={() => banUser(r.targetId)}>유저 차단</button>
+            </>
+          )}
         </div>
       ))}
     </div>

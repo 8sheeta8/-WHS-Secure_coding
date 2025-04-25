@@ -22,6 +22,7 @@ function ProductForm() {
           title,
           description: desc,
           price,
+          bankAccount 
         },
         {
           headers: {
@@ -55,6 +56,11 @@ function ProductForm() {
         type="number"
         value={price}
         onChange={(e) => setPrice(e.target.value)}
+      />
+      <input
+        value={bankAccount}
+        onChange={(e) => setBankAccount(e.target.value)}
+        placeholder="송금 계좌"
       />
       <button type="submit">등록</button>
     </form>

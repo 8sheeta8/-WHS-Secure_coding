@@ -17,15 +17,12 @@ const itemSchema = new mongoose.Schema({
       message: "올바른 이미지 주소를 입력해주세요."
     }
   },                            // 이미지 링크
-  isSold: { type: Boolean, default: false },             // 판매 완료 여부
-  reportCount: { type: Number, default: 0 },             // 신고 횟수
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
-  },                                                     // 등록한 사용자
-  createdAt: { type: Date, default: Date.now },           // 등록 일시
-  isHidden: { type: Boolean, default: false } //신고 후 차단
+  bankAccount: { type: String, default: "" },
+  isSold: { type: Boolean, default: false },
+  reportCount: { type: Number, default: 0 },
+  isHidden: { type: Boolean, default: false },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  createdAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model("Item", itemSchema);

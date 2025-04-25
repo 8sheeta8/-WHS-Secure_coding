@@ -34,11 +34,20 @@ function MyPage() {
   return (
     <div>
       <h2>마이페이지</h2>
-      <p>이메일: {typeof user.email === "string" ? user.email : "이메일 없음"}</p>
-      <input value={bio} onChange={(e) => setBio(e.target.value)} />
-      <button onClick={update}>소개글 수정</button>
+      <p>이메일: {email}</p>
+      <input
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
+        placeholder="소개글"
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="비밀번호 변경"
+      />
+      <button onClick={update}>수정</button>
     </div>
   );
 }
-
 export default MyPage;

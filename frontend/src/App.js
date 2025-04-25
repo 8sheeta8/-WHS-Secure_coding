@@ -9,6 +9,7 @@ import ProductDetail from "./pages/ProductDetail";
 import ProductForm from "./pages/ProductForm";
 import Chat from "./pages/Chat";
 import Admin from "./pages/Admin";
+import MyItems from "./pages/MyItems"; // ✅ 추가됨
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/products/:id" element={<ProductDetail />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/mine" element={<MyItems />} /> {/* ✅ 경로 등록 */}
       </Routes>
     </BrowserRouter>
   );

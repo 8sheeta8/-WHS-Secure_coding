@@ -16,16 +16,17 @@ function ProductDetail() {
     axios.get(`/api/items/${id}`).then(res => setItem(res.data));
   }, [id]);
 
-  const report = () => {
-    axios.post(`/api/items/${id}/report`, { reason }, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    }).then(() => alert("신고 완료"));
+  const report = async () => {
+    await axios.post(`/items/${itemId}/report`, { reason });
+    alert("신고 완료");
   };
+  
 
   return (
     <div>
       <h2>{item.title}</h2>
       <p>{item.description}</p>
+      <p>송금 계좌: {item.bankAccount || "미입력"}</p>
       <p>가격: {item.price}원</p>
       <textarea placeholder="신고 사유" value={reason} onChange={(e) => setReason(e.target.value)} />
       <button onClick={report}>신고</button>

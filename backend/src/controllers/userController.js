@@ -46,7 +46,9 @@ exports.updateProfile = async (req, res) => {
   const { bio, password } = req.body;
   const data = {};
   if (bio) data.bio = bio;
-  if (password) data.password = await bcrypt.hash(password, 10);
+  if (password) data.password = password; // 🔒 암호화 안함
   await User.findByIdAndUpdate(req.user.id, data);
-  res.json({ msg: "Updated" });
+  res.json({ msg: "업데이트 완료" });
 };
+
+
