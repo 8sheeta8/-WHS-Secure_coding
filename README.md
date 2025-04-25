@@ -1,4 +1,4 @@
-# -WHS-Secure_coding
+# WHS3_Secure_coding
 **중고거래 플랫폼에 있어야 하는 기능:**
 
 - 사람들이 플랫폼에 가입할 수 있어야 함
